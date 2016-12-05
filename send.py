@@ -1,8 +1,6 @@
 import broadlink
 from IPython import embed
-import time
 import yaml
-import sys
 import argparse
 
 parser = argparse.ArgumentParser(prog='PROG')
