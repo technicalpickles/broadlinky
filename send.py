@@ -1,7 +1,7 @@
-import broadlink
 from IPython import embed
-import yaml
 import argparse
+import broadlink
+import yaml
 
 parser = argparse.ArgumentParser(prog='PROG')
 parser.add_argument('thing')
