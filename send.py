@@ -13,9 +13,9 @@ args = parser.parse_args()
 codes_path = os.path.dirname(os.path.abspath(__file__)) + '/codes.yaml'
 
 with open(codes_path, 'r') as file:
-    data = yaml.load(file)
+    code_data = yaml.load(file)
 
-thing = data[args.thing]
+thing = code_data[args.thing]
 if args.state == 'on':
     packet = thing[True]
 elif args.state == 'off':
