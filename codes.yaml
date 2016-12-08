@@ -8,3 +8,11 @@ christmas_lights:
   off: !!binary |
     sggyAAcTEgcGEwYTBhMSBwYTEgcGEwYTBhMSBxIHEgcHExIHBhMGEwYTBhMSBxMHBhMGEwa8AAAA
     AAAA
+
+nursery_night_lights:
+  on: !!binary |
+   sgcyAAYUEggGEwYUBhQSBwYUEgcGFAYUBhQSBwYTEgcSCBIIBhMGEwYUBhQGFAYTEggSBwa8AAAA
+   AAAA
+  off: !!binary |
+    sgcyAAYTEggGFAYUBhMSBwYTEwcGEwYTBhQSCAYUEggSBxMHBxMHEwYTBhMSCBIIBhQGFAa8AAAA
+    AAAA
