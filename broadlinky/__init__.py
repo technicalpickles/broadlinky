@@ -25,7 +25,7 @@ class Broadlinky:
         with open(devices_path, 'r') as file:
             self.devices_data = yaml.load(file)
 
-        # TODO handle multiples?
+        # TODO handle multiples? 
         broadlinks = broadlink.discover(timeout=5)
         self.broadlink = broadlinks[0]
         self.broadlink.auth()
