@@ -1,4 +1,5 @@
-"""Discover new packets with Broadlink."""
+#!/usr/bin/env python3
+"""Interface to discover RF/IR packets and remember devices & commands."""
 import argparse
 from broadlinky import Broadlinky
 

@@ -1,32 +1,19 @@
 #!/usr/bin/env python3
-from IPython import embed
+"""Interface to send RF/IR commands."""
 import argparse
-import broadlink
-import yaml
-import os
-import re
+from broadlinky import Broadlinky
 
-parser = argparse.ArgumentParser(prog='PROG')
-parser.add_argument('thing')
-parser.add_argument('state')
-args = parser.parse_args()
 
-codes_path = os.path.dirname(os.path.abspath(__file__)) + '/devices.yaml'
+def main():
+    """Send device commands."""
+    parser = argparse.ArgumentParser(prog='PROG')
+    parser.add_argument('device')
+    parser.add_argument('command')
+    args = parser.parse_args()
 
-with open(codes_path, 'r') as file:
-    code_data = yaml.load(file)
+    broadlinky = Broadlinky()
+    broadlinky.send_device_command(args.device, args.command)
 
-thing = code_data[args.thing]
-if args.state == 'on':
-    packet = thing[True]
-elif args.state == 'off':
-    packet = thing[False]
-elif re.search('^\d+$', args.state):
-    packet = thing[int(args.state)]
-else:
-    packet = thing[args.state]
 
-devices = broadlink.discover(timeout=5)
-device = devices[0]
-device.auth()
-device.send_data(packet)
+if __name__ == "__main__":
+    main()

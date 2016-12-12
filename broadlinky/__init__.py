@@ -1,5 +1,6 @@
 """Interface for discovering/sending codes with a Broadlink device."""
 import os
+import re
 import time
 
 import broadlink
@@ -9,7 +10,7 @@ import yaml
 class Broadlinky:
     """Interface for grouping IR/RF packets into logical devices."""
 
-    def __init__(self, packets_path=None):
+    def __init__(self, packets_path=None, devices_path=None):
         if packets_path is None:
             packets_path = os.path.dirname(os.path.abspath(__file__)) + '/../packets.yaml'
         self.packets_path = packets_path
@@ -17,6 +18,12 @@ class Broadlinky:
         with open(packets_path, 'r') as file:
             # TODO handle empty data
             self.packet_data = yaml.load(file)
+
+        if devices_path is None:
+            devices_path = os.path.dirname(os.path.abspath(__file__)) + '/../devices.yaml'
+        self.devices_path = devices_path
+        with open(devices_path, 'r') as file:
+            self.devices_data = yaml.load(file)
 
         # TODO handle multiples?
         broadlinks = broadlink.discover(timeout=5)
@@ -55,3 +62,18 @@ class Broadlinky:
 
         with open(self.packets_path, "w") as packets_file:
             yaml.dump(self.packet_data, packets_file)
+
+    def send_device_command(self, device_name, command_name):
+        """Send a named command to a device."""
+        device_commands = self.devices_data[device_name]
+
+        if command_name == 'on':
+            packet = device_commands[True]
+        elif command_name == 'off':
+            packet = device_commands[False]
+        elif re.search(r"^\d+$", command_name):
+            packet = device_commands[int(command_name)]
+        else:
+            packet = device_commands[command_name]
+
+        self.broadlink.send_data(packet)
