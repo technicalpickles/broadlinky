@@ -8,14 +8,17 @@ def discover(broadlinky, args):
     while True:
         broadlinky.learn_device_packet(args.device)
 
+
 def send(broadlinky, args):
     device = broadlinky.devices[args.device]
-    device.send_command(args.command)
+    device.send_command(args.namespace, args.command)
+
 
 def server(broadlinky, args):
     from .app import build_app
     app = build_app()
     app.run()
+
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(prog='broadlinky')
@@ -27,7 +30,8 @@ def parse_args(args=None):
 
     send_parser = subparsers.add_parser('send', help='send a device command')
     send_parser.add_argument('device')
-    send_parser.add_argument('command')
+    send_parser.add_argument('namespace')
+    send_parser.add_argument('state')
     send_parser.set_defaults(func=send)
 
     server_parser = subparsers.add_parser('server', help='start webserver')

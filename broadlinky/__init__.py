@@ -8,35 +8,39 @@ import yaml
 
 
 class Device:
-    def __init__(self, broadlinky, name, device_commands):
+    def __init__(self, broadlinky, name, device_config):
         self.broadlinky = broadlinky
         self.name = name
-        self.device_commands = device_commands
-        self.state = 'OFF'
+        self.device_config = device_config
+        self.states = {'power': 'OFF'}
 
     def turn_on(self):
-        self.send_command('on')
+        return self.send_command('power', 'on')
 
     def turn_off(self):
-        self.send_command('on')
+        return self.send_command('power', 'on')
 
-    def send_command(self, command_name):
+    def send_command(self, namespace, command_name):
         command_name = command_name.lower()
+
         new_state = None
+        namespace_config = self.device_config[namespace]
         if command_name == 'on':
-            packet = self.device_commands[True]
+            packet = namespace_config[True]
             new_state = 'ON'
         elif command_name == 'off':
-            packet = self.device_commands[False]
+            packet = namespace_config[False]
             new_state = 'OFF'
         elif re.search(r"^\d+$", command_name):
-            packet = self.device_commands[int(command_name)]
+            packet = namespace_config[int(command_name)]
+            new_state = command_name
         else:
-            packet = self.device_commands[command_name]
+            packet = namespace_config[command_name]
+            new_state = command_name
 
         self.broadlinky.broadlink.send_data(packet)
         if new_state is not None:
-            self.state = new_state
+            self.states[namespace] = new_state
 
         return new_state
 
