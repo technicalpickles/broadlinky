@@ -9,10 +9,13 @@ def discover(broadlinky, args):
         broadlinky.learn_device_packet(args.device)
 
 def send(broadlinky, args):
-    broadlinky.send_device_command(args.device, args.command)
+    device = broadlinky.devices[args.device]
+    device.send_command(args.command)
 
 def server(broadlinky, args):
-    pass
+    from .app import build_app
+    app = build_app()
+    app.run()
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(prog='broadlinky')

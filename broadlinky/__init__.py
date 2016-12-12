@@ -7,6 +7,40 @@ import broadlink
 import yaml
 
 
+class Device:
+    def __init__(self, broadlinky, name, device_commands):
+        self.broadlinky = broadlinky
+        self.name = name
+        self.device_commands = device_commands
+        self.state = 'OFF'
+
+    def turn_on(self):
+        self.send_command('on')
+
+    def turn_off(self):
+        self.send_command('on')
+
+    def send_command(self, command_name):
+        command_name = command_name.lower()
+        new_state = None
+        if command_name == 'on':
+            packet = self.device_commands[True]
+            new_state = 'ON'
+        elif command_name == 'off':
+            packet = self.device_commands[False]
+            new_state = 'OFF'
+        elif re.search(r"^\d+$", command_name):
+            packet = self.device_commands[int(command_name)]
+        else:
+            packet = self.device_commands[command_name]
+
+        self.broadlinky.broadlink.send_data(packet)
+        if new_state is not None:
+            self.state = new_state
+
+        return new_state
+
+
 class Broadlinky:
     """Interface for grouping IR/RF packets into logical devices."""
 
@@ -25,12 +59,15 @@ class Broadlinky:
         with open(devices_path, 'r') as file:
             self.devices_data = yaml.load(file)
 
-        # TODO handle multiples? 
+        # TODO handle multiples?
         broadlinks = broadlink.discover(timeout=5)
         self.broadlink = broadlinks[0]
         self.broadlink.auth()
 
         self.last_learned_packet = None
+
+        self.devices = dict((name, Device(self, name, device_commands))
+                        for name, device_commands in self.devices_data.items())
 
     def known_device_packets(self, device_name):
         """Known packets for a device."""

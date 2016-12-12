@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-source ../../picklehome/bin/activate # TODO probably use own virtualenv?
-export FLASK_APP=app.py
+#source ../../picklehome/bin/activate # TODO probably use own virtualenv?
+export FLASK_APP=broadlinky/app.py
 python3 -m flask run
