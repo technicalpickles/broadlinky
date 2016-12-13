@@ -29,7 +29,12 @@ class Device:
             packet = namespace_config[True]
             new_state = 'ON'
         elif command_name == 'off':
-            packet = namespace_config[False]
+            # toggle just sends on again
+            if namespace_config.get('toggle', False):
+                packet = namespace_config[True]
+            else:
+                packet = namespace_config[False]
+            # TODO how to handle drift?
             new_state = 'OFF'
         elif re.search(r"^\d+$", command_name):
             packet = namespace_config[int(command_name)]
