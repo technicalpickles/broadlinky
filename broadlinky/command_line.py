@@ -3,11 +3,20 @@ import sys
 
 from . import Broadlinky
 
-def discover(broadlinky, args):
+def learn(broadlinky, args):
     broadlinky = Broadlinky()
-    while True:
-        broadlinky.learn_device_packet(args.device)
+    device = broadlinky.devices[args.device]
 
+    while True:
+        packet = broadlinky.learn()
+        if packet is not None:
+            replay = input("Learned a thing. Replay it to confirm functioning? ")
+            if replay == 'yes':
+                broadlinky.send_data(packet)
+
+                command = input("What do you want to save it as (Blank resumes learning) ")
+                if command != '':
+                    device.remember_command(args.namespace, command, packet)
 
 def send(broadlinky, args):
     device = broadlinky.devices[args.device]
@@ -24,9 +33,10 @@ def parse_args(args=None):
     parser = argparse.ArgumentParser(prog='broadlinky')
     subparsers = parser.add_subparsers(dest='subcommand', help='command help')
 
-    discover_parser = subparsers.add_parser('discover', help='discover device commands')
-    discover_parser.add_argument('device')
-    discover_parser.set_defaults(func=discover)
+    learn_parser = subparsers.add_parser('learn', help='learn device commands')
+    learn_parser.add_argument('device')
+    learn_parser.add_argument('namespace')
+    learn_parser.set_defaults(func=learn)
 
     send_parser = subparsers.add_parser('send', help='send a device command')
     send_parser.add_argument('device')

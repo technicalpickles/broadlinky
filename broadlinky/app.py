@@ -45,7 +45,7 @@ def build_app():
             elif state == 'OFF':
                 device.turn_off()
 
-        if device.states[namespace] == command:
+        if device.states.get(namespace) == command:
             return 'ON'
         else:
             return 'OFF'

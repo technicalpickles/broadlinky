@@ -49,6 +49,11 @@ class Device:
 
         return new_state
 
+    def remember_command(self, namespace, command_name, packet):
+        # TODO handle namespace being unset
+        self.device_config[namespace][command_name] = packet
+        self.broadlinky.save()
+
 
 class Broadlinky:
     """Interface for grouping IR/RF packets into logical devices."""
@@ -83,11 +88,9 @@ class Broadlinky:
         return self.packet_data.get(device_name, [])
 
     # TODO timeout argument?
-    def learn_device_packet(self, device_name):
+    def learn(self):
         """Learn an IR or RF packet for the device."""
         print("Learning", end="", flush=True)
-
-        known_device_packets = self.known_device_packets(device_name)
 
         packet = None
         self.broadlink.enter_learning()
@@ -96,18 +99,13 @@ class Broadlinky:
             time.sleep(1)
             packet = self.broadlink.check_data()
 
-        if not packet in known_device_packets:
-            print("\n" + yaml.dump(packet), flush=True)
-            self.remember_device_packet(device_name, packet, known_device_packets)
-            return packet
+        print(flush=True)
+        return packet
 
-    def remember_device_packet(self, device_name, packet, known_device_packets):
-        """Remember a device packet for later."""
-        known_device_packets.append(packet)
-        self.packet_data[device_name] = known_device_packets
-
-        with open(self.packets_path, "w") as packets_file:
-            yaml.dump(self.packet_data, packets_file)
+    def save(self):
+        with open(self.devices_path, "w") as devices_file:
+            # TODO preserve comments?
+            yaml.dump(self.devices_data, devices_file)
 
     def send_data(self, packet):
         self.broadlink.send_data(packet)
