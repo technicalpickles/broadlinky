@@ -20,20 +20,20 @@ def build_app():
         return 'Hello, World!'
 
 
-    @app.route('/<device_id>/<namespace>', methods=['GET', 'POST'])
-    def device_namespace_command_in_body(device_id=None, namespace=None):
+    @app.route('/<device_id>/<state>', methods=['GET', 'POST'])
+    def device_namespace_command_in_body(device_id=None, state=None):
         """Send a code to turn on a device."""
         # TODO check exists and 404 otherwise
         device = broadlinky.devices[device_id]
 
         if request.method == 'POST':
-            command = request.data.decode('UTF-8')  # lol
-            device.send_command(namespace, command)
+            state_value = request.data.decode('UTF-8')  # lol
+            device.set_state(state, state_value)
 
-        return device.states[namespace]
+        return device.states[state]
 
-    @app.route('/<device_id>/<namespace>/<command>', methods=['GET', 'POST'])
-    def device_namespace_command_in_url(device_id=None, namespace=None, command=None):
+    @app.route('/<device_id>/<state>/<state_value>', methods=['GET', 'POST'])
+    def device_namespace_command_in_url(device_id=None, state=None, state_value=None):
         """Send a code to turn on a device."""
         # TODO check exists and 404 otherwise
         device = broadlinky.devices[device_id]
@@ -41,11 +41,11 @@ def build_app():
             state = request.data.decode('UTF-8')  # lol
 
             if state == 'ON' or state == '': # no body, no problem
-                device.send_command(namespace, command)
+                device.set_state(state, state_value)
             elif state == 'OFF':
                 device.turn_off()
 
-        if device.states.get(namespace) == command:
+        if device.states.get(state) == state_value:
             return 'ON'
         else:
             return 'OFF'

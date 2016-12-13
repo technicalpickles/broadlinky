@@ -8,57 +8,57 @@ import yaml
 
 
 class Device:
-    def __init__(self, broadlinky, name, device_config):
+    def __init__(self, broadlinky, name, state_config):
         self.broadlinky = broadlinky
         self.name = name
-        self.device_config = device_config
+        self.state_config = state_config
         self.states = {'power': 'OFF'}
 
     def turn_on(self):
-        return self.send_command('power', 'on')
+        return self.set_state('power', 'on')
 
     def turn_off(self):
-        return self.send_command('power', 'off')
+        return self.set_state('power', 'off')
 
-    def send_command(self, namespace, command_name):
-        command_name = command_name.lower()
+    def set_state(self, state, value):
+        value = value.lower()
 
         new_state = None
-        namespace_config = self.device_config[namespace]
-        if command_name == 'on':
-            packet = namespace_config[True]
+        state_config = self.state_config[state]
+        if value == 'on':
+            packet = state_config[True]
             new_state = 'ON'
-        elif command_name == 'off':
+        elif value == 'off':
             # toggle just sends on again
-            if namespace_config.get('toggle', False):
-                packet = namespace_config[True]
+            if state_config.get('toggle', False):
+                packet = state_config[True]
             else:
-                packet = namespace_config[False]
+                packet = state_config[False]
             # TODO how to handle drift?
             new_state = 'OFF'
-        elif re.search(r"^\d+$", command_name):
-            packet = namespace_config[int(command_name)]
-            new_state = command_name
+        elif re.search(r"^\d+$", value):
+            packet = state_config[int(value)]
+            new_state = value
         else:
-            packet = namespace_config[command_name]
-            new_state = command_name
+            packet = state_config[value]
+            new_state = value
 
         self.broadlinky.send_data(packet)
         if new_state is not None:
-            self.states[namespace] = new_state
+            self.states[state] = new_state
 
         return new_state
 
-    def remember_command(self, namespace, command_name, packet):
-        if namespace not in self.device_config:
-            self.device_config[namespace] = {}
+    def remember_state_value_packet(self, state, value, packet):
+        if state not in self.state_config:
+            self.state_config[state] = {}
 
-        if command_name == 'on':
-            command_name = True
-        elif command_name == 'off':
-            command_name = False
+        if value == 'on':
+            value = True
+        elif value == 'off':
+            value = False
 
-        self.device_config[namespace][command_name] = packet
+        self.state_config[state][value] = packet
         self.broadlinky.save()
 
 
@@ -94,7 +94,7 @@ class Broadlinky:
         if device_name not in self.devices:
             device = Device(self, device_name, {})
             self.devices[device_name] = device
-            self.devices_data[device_name] = device.device_config
+            self.devices_data[device_name] = device.state_config
 
         return self.devices[device_name]
 
