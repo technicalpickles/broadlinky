@@ -65,15 +65,7 @@ class Device:
 class Broadlinky:
     """Interface for grouping IR/RF packets into logical devices."""
 
-    def __init__(self, packets_path=None, devices_path=None):
-        if packets_path is None:
-            packets_path = os.path.dirname(os.path.abspath(__file__)) + '/../packets.yaml'
-        self.packets_path = packets_path
-        # TODO handle nonexistant file
-        with open(packets_path, 'r') as file:
-            # TODO handle empty data
-            self.packet_data = yaml.load(file)
-
+    def __init__(self, devices_path=None):
         if devices_path is None:
             devices_path = os.path.dirname(os.path.abspath(__file__)) + '/../devices.yaml'
         self.devices_path = devices_path
