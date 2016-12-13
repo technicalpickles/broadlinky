@@ -1,5 +1,4 @@
 christmas_lights:
-  states: power
   power:
     on: !!binary |
       sgD8AAYSEgYGEgYTBRMRBwUTEQcFEwUTBhISBxEGEgcFExEHBRMFEwUTBRMGEgYSEgYSBwW7BhIS
@@ -12,7 +11,6 @@ christmas_lights:
       AAAA
 
 nursery_night_lights:
-  states: power
   power:
     on: !!binary |
      sgcyAAYUEggGEwYUBhQSBwYUEgcGFAYUBhQSBwYTEgcSCBIIBhMGEwYUBhQGFAYTEggSBwa8AAAA
@@ -21,19 +19,16 @@ nursery_night_lights:
       sgcyAAYTEggGFAYUBhMSBwYTEwcGEwYTBhQSCAYUEggSBxMHBxMHEwYTBhMSCBIIBhQGFAa8AAAA
       AAAA
 
-exterior_lights_1:
-  states:
-    power: toggle
-    color: string
-    mode: string
-
+exterior_christmas_lights:
   power:
-    toggle: true
+    #toggle: true
     on: !!binary |
-      sgC8ABEQEiAREREhESERIREQEiERIREhEBERIREREBEREBIhEAABCmQwEhARIREQEiERIREhERAR
-      IREhESEREREhERAREREQEiARAAEJZDESEBEhERARIRIgESESEBEhESERIREQEiASDxIQERERIREA
-      AQlkMREQEiASEBEhESERIREQEiASIREgEhARIREQEhAREREgEQABCmMyERASIBERESERIREhERAR
-      IRIgESEREREgEhAREREQEiARAAXcAAAAAAAAAAAAAAAA
+      sgUmAGQyEhESIRIREiESIRIhEhESIRIhEiESERIhEhESERIREhESAAEKAAA=
+    off: !!binary |
+      sgCkABERERASDxIgEQABCmMxEhARIREQEiASIRAhEhARIREhESEREBIhERAREBIPEiERAAEJYzIR
+      EBEhERERIREhESEREBEhEiARIRIPEiEREBEQEhARIREAAQlkMREQEiASEBEhESERIREQEiERIBEh
+      EhARIREQEhAREBEhEQABCWQyERARIRERESASIBEhEhARIREhESEREBEhEREREBERESERAAXcAAAA
+      AA==
 
   color:
     cool_white: !!binary |
