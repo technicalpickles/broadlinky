@@ -43,7 +43,7 @@ class Device:
             packet = namespace_config[command_name]
             new_state = command_name
 
-        self.broadlinky.broadlink.send_data(packet)
+        self.broadlinky.send_data(packet)
         if new_state is not None:
             self.states[namespace] = new_state
 
@@ -109,17 +109,5 @@ class Broadlinky:
         with open(self.packets_path, "w") as packets_file:
             yaml.dump(self.packet_data, packets_file)
 
-    def send_device_command(self, device_name, command_name):
-        """Send a named command to a device."""
-        device_commands = self.devices_data[device_name]
-
-        if command_name == 'on':
-            packet = device_commands[True]
-        elif command_name == 'off':
-            packet = device_commands[False]
-        elif re.search(r"^\d+$", command_name):
-            packet = device_commands[int(command_name)]
-        else:
-            packet = device_commands[command_name]
-
+    def send_data(self, packet):
         self.broadlink.send_data(packet)
