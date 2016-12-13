@@ -22,7 +22,7 @@ def server(broadlinky, args):
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(prog='broadlinky')
-    subparsers = parser.add_subparsers(dest='command', help='command help')
+    subparsers = parser.add_subparsers(dest='subcommand', help='command help')
 
     discover_parser = subparsers.add_parser('discover', help='discover device commands')
     discover_parser.add_argument('device')
@@ -31,7 +31,7 @@ def parse_args(args=None):
     send_parser = subparsers.add_parser('send', help='send a device command')
     send_parser.add_argument('device')
     send_parser.add_argument('namespace')
-    send_parser.add_argument('state')
+    send_parser.add_argument('command')
     send_parser.set_defaults(func=send)
 
     server_parser = subparsers.add_parser('server', help='start webserver')
