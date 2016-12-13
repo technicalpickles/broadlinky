@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """An app for controlling the broadlink."""
 
-import os
-import yaml
-
 from broadlinky import Broadlinky
 
 from flask import Flask
@@ -37,4 +34,5 @@ def build_app():
 
     return app
 
+# pylint: disable=C0103
 app = build_app()
