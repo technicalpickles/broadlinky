@@ -18,7 +18,7 @@ class Device:
         return self.send_command('power', 'on')
 
     def turn_off(self):
-        return self.send_command('power', 'on')
+        return self.send_command('power', 'off')
 
     def send_command(self, namespace, command_name):
         command_name = command_name.lower()
