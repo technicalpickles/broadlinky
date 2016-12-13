@@ -50,7 +50,14 @@ class Device:
         return new_state
 
     def remember_command(self, namespace, command_name, packet):
-        # TODO handle namespace being unset
+        if namespace not in self.device_config:
+            self.device_config[namespace] = {}
+
+        if command_name == 'on':
+            command_name = True
+        elif command_name == 'off':
+            command_name = False
+
         self.device_config[namespace][command_name] = packet
         self.broadlinky.save()
 
@@ -82,6 +89,14 @@ class Broadlinky:
 
         self.devices = dict((name, Device(self, name, device_commands))
                         for name, device_commands in self.devices_data.items())
+
+    def get_device(self, device_name):
+        if device_name not in self.devices:
+            device = Device(self, device_name, {})
+            self.devices[device_name] = device
+            self.devices_data[device_name] = device.device_config
+
+        return self.devices[device_name]
 
     def known_device_packets(self, device_name):
         """Known packets for a device."""

@@ -5,7 +5,7 @@ from . import Broadlinky
 
 def learn(broadlinky, args):
     broadlinky = Broadlinky()
-    device = broadlinky.devices[args.device]
+    device = broadlinky.get_device(args.device)
 
     while True:
         packet = broadlinky.learn()
