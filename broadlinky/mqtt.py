@@ -90,8 +90,7 @@ def run(broadlinky):
             print("unhandled topic " + msg.topic + ": " + payload)
 
     client = mqtt.Client(protocol=mqtt.MQTTv31)
-    # FIXME getting authorization failed when mosquitto running with auth
-    client.username_pw_set('homeassistant', "p4qWmc927B3hGp,BdJ4g")
+    client.username_pw_set('test', "test")
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect("localhost", 1883, 60)
