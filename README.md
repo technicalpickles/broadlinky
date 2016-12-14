@@ -43,10 +43,30 @@ You can test with `send`, specifying a device, state, and value to send.
 
 Run `server` to start interacting it with over HTTP or MQTT. It integrates well with HomeAssistant using [Restful Switches](https://home-assistant.io/components/switch.rest/) and better yet [MQTT Switches](https://home-assistant.io/components/switch.mqtt/)
 
-Example
--------
+Examples
+--------
 
-Restful Switch for power:
+Learn power settings for an outlet:
+
+```
+$ python3 -m broadlinky.command_line learn zap_319_2 power
+Learning..
+Learned a thing. Replay it to confirm functioning? yes
+What do you want to save it as (Blank resumes learning) on
+Learning.....................
+Learned a thing. Replay it to confirm functioning? yes
+What do you want to save it as (Blank resumes learning) off
+Learning.^C
+```
+
+Test new settings:
+
+```
+$ python3 -m broadlinky.command_line send zap_319_2 power on
+$ python3 -m broadlinky.command_line send zap_319_2 power off
+```
+
+HA Restful Switch for power:
 
 ```yaml
 - platform: rest
@@ -54,7 +74,7 @@ Restful Switch for power:
   resource: http://localhost:5000/nursery_night_lights/power
 ```
 
-Restful swithces for changing color:
+HA Restful swithces for changing color:
 
 ```yaml
 - platform: rest
@@ -65,7 +85,7 @@ Restful swithces for changing color:
   resource: http://localhost:5000/exterior_christmas_lights/color/red
 ```
 
-MQTT Switch for controlling power:
+HA MQTT Switch for controlling power:
 
 ```yaml
 - platform: mqtt
@@ -78,7 +98,7 @@ MQTT Switch for controlling power:
   payload_off: "off"
 ```
 
-MQTT Switch for changing multiple colors:
+HA MQTT Switch for changing multiple colors:
 
 ```yaml
 - platform: mqtt
