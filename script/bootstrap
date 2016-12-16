@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+pip3 show -q broadlink || pip3 install broadlink

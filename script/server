@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-#source ../../picklehome/bin/activate # TODO probably use own virtualenv?
-export FLASK_APP=broadlinky/app.py
-python3 -m flask run
+# shellcheck disable=SC1091
+. script/bootstrap
+
+export PYTHONPATH=.
+python3 -m broadlinky.command_line server
