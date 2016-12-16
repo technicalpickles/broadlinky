@@ -37,6 +37,8 @@ optional arguments:
   -h, --help           show this help message and exit
 ```
 
+Helpers in `script` are offered as convienence, ie `script/learn`, `script/send`, `script/server`.
+
 Start with `learn`, passing in a name of a device and a state. This kicks of a loop to enter the RM Pro into learning mode, you can press the button, and it will let you know what it gets. Sometimes it takes a lot of pressing before it's captured. Once captured, you can replay it to confirm it works, and then save it as a value. Values are saved in `devices.yaml`.
 
 You can test with `send`, specifying a device, state, and value to send.
@@ -49,7 +51,7 @@ Examples
 Learn power settings for an outlet:
 
 ```
-$ python3 -m broadlinky.command_line learn zap_319_2 power
+$ script/learn zap_319_2 power
 Learning..
 Learned a thing. Replay it to confirm functioning? yes
 What do you want to save it as (Blank resumes learning) on
@@ -62,8 +64,8 @@ Learning.^C
 Test new settings:
 
 ```
-$ python3 -m broadlinky.command_line send zap_319_2 power on
-$ python3 -m broadlinky.command_line send zap_319_2 power off
+$ script/send zap_319_2 power on
+$ script/send zap_319_2 power off
 ```
 
 HA Restful Switch for power:

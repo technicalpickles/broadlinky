@@ -4,4 +4,4 @@
 . script/bootstrap
 
 export PYTHONPATH=.
-python3 -m broadlinky.command_line server "$@"
+python3 -m broadlinky.command_line send "$@"
