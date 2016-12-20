@@ -25,16 +25,24 @@ class Device:
 
         new_state = None
         state_config = self.state_config[state]
+        toggle = state_config.get('toggle', False)
+
         if value == 'on':
-            packet = state_config[True]
+            if toggle:
+                packet = toggle
+            else:
+                packet = state_config[True]
+
             new_state = 'ON'
         elif value == 'off':
-            # toggle just sends on again
-            if state_config.get('toggle', False):
-                packet = state_config[True]
+            if toggle:
+                packet = toggle
             else:
-                packet = state_config[False]
-            # TODO how to handle drift?
+                if state_config.get('toggle', False):
+                    packet = state_config[True]
+                else:
+                    packet = state_config[False]
+            # FIXME how to handle drift?
             new_state = 'OFF'
         elif re.search(r"^\d+$", value):
             packet = state_config[int(value)]
