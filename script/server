@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 # shellcheck disable=SC1091
+
+cd $(dirname $0)/..
+
 . script/bootstrap
+. .env
 
 export PYTHONPATH=.
 python3 -m broadlinky.command_line server "$@"

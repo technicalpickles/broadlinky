@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 
@@ -89,9 +90,15 @@ def run(broadlinky):
         else:
             print("unhandled topic " + msg.topic + ": " + payload)
 
+    # FIXME use a URL w/ host, port, user, pass instead of multiple env
+    user = os.environ['BROADLINKY_MQTT_USER']
+    password = os.environ['BROADLINKY_MQTT_PASSWORD']
+    host = os.environ['BROADLINKY_MQTT_HOST']
+    port = int(os.environ['BROADLINKY_MQTT_PORT'])
     client = mqtt.Client(protocol=mqtt.MQTTv31)
-    client.username_pw_set('test', "test")
+    client.username_pw_set(user, password)
+    # FIXME make exit enter process on failure (HTTP still up)
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect("localhost", 1883, 60)
+    client.connect(host, port, 60)
     client.loop_start()
