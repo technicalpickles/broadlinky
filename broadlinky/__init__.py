@@ -1,17 +1,21 @@
 """Interface for discovering/sending codes with a Broadlink device."""
+import logging
 import os
 import re
+import socket
 import time
 
 import broadlink
 import yaml
 
+_LOGGER = logging.getLogger(__name__)
 
 class Device:
     def __init__(self, broadlinky, name, state_config):
         self.broadlinky = broadlinky
         self.name = name
         self.state_config = state_config
+        # TODO check mqtt state instead?
         self.states = {'power': 'OFF'}
 
     def turn_on(self):
@@ -98,10 +102,6 @@ class Broadlinky:
 
         return self.devices[device_name]
 
-    def known_device_packets(self, device_name):
-        """Known packets for a device."""
-        return self.packet_data.get(device_name, [])
-
     # TODO timeout argument?
     def learn(self):
         """Learn an IR or RF packet for the device."""
@@ -122,5 +122,19 @@ class Broadlinky:
             # TODO preserve comments?
             yaml.dump(self.devices_data, devices_file)
 
-    def send_data(self, packet):
-        self.broadlink.send_data(packet)
+    def send_data(self, packet, retry=2):
+        if packet is None:
+            _LOGGER.debug("Empty packet.")
+            return True
+        try:
+            self.broadlink.send_data(packet)
+        except socket.timeout as error:
+            if retry < 1:
+                _LOGGER.error(error)
+                return False
+            try:
+                self.broadlink.auth()
+            except socket.timeout:
+                pass
+            return self.send_data(packet, max(0, retry-1))
+        return True

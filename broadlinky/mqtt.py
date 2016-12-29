@@ -1,9 +1,12 @@
 import os
+import logging
 import re
 import sys
 
 import paho.mqtt.client as mqtt
 
+_LOGGER = logging.getLogger(__name__)
+_LOGGER.setLevel('DEBUG')
 
 def run(broadlinky):
 
@@ -25,7 +28,7 @@ def run(broadlinky):
 
             sys.exit()
 
-        print("Connected.")
+        print("Connected to mqtt")
         # broadlinky/devices/<device>/<state>/command
         client.subscribe("broadlinky/devices/+/+/command")
 
@@ -88,7 +91,7 @@ def run(broadlinky):
                                payload=new_value_payload, qos=0, retain=True)
 
         else:
-            print("unhandled topic " + msg.topic + ": " + payload)
+            _LOGGER.error("unhandled topic " + msg.topic + ": " + payload)
 
     # FIXME use a URL w/ host, port, user, pass instead of multiple env
     user = os.environ['BROADLINKY_MQTT_USER']
