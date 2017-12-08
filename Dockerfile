@@ -1,9 +1,9 @@
-FROM python:3.5
+FROM python:3.4
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN pip install --no-cache-dir broadlink pyyaml
+RUN pip install --no-cache-dir broadlink pyyaml paho-mqtt flask
 
 COPY . .
 
